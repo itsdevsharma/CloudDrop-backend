@@ -1,0 +1,14 @@
+#dependencies
+node_modules/
+#build
+build/
+dist/
+#environment variables
+.env
+
+#misc
+.DS_Store
+npm-debug.log*
+
+# Editor directories and files
+.vscode/*
