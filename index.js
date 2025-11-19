@@ -11,6 +11,14 @@ dotenv.config();
 
 const app = express();
 
+
+app.use((err, req, res, next) => {
+  console.log("🔥 Backend Error:", err);
+  res.status(500).json({ error: err.message });
+});
+
+
+
 //Middleware
 app.use(express.json());
 app.use(cors());
