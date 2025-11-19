@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import cloudinary from "../config/db.js";
+import { v2 as cloudinary } from "cloudinary";
 import fileModel from "../models/file.model.js";
 import auth from "../middleware/auth.js";
 
@@ -10,7 +10,7 @@ const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Cloudinary config
-cloudinary.v2.config({
+cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
@@ -30,7 +30,7 @@ router.post("/upload", auth, upload.single("file"), async (req, res) => {
 
     // Upload using buffer stream
     const result = await new Promise((resolve, reject) => {
-      const stream = cloudinary.v2.uploader.upload_stream(
+      const stream = cloudinary.uploader.upload_stream(
         { folder: "uploads" },
         (error, uploadResult) => {
           if (error) reject(error);
@@ -58,20 +58,4 @@ router.post("/upload", auth, upload.single("file"), async (req, res) => {
   }
 });
 
-// VIEW FILES
-router.get("/my-files", auth, async (req, res) => {
-  const files = await fileModel.find({ uploadedBy: req.user.id });
-  res.json(files);
-});
-
-// DELETE FILE
-router.delete("/:id", auth, async (req, res) => {
-  const file = await fileModel.findById(req.params.id);
-  if (!file) return res.status(404).json({ message: "Not found" });
-
-  await fileModel.deleteOne({ _id: req.params.id });
-  res.json({ message: "Deleted" });
-});
-
 export default router;
-
