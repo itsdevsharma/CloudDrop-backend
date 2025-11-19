@@ -58,4 +58,17 @@ router.post("/upload", auth, upload.single("file"), async (req, res) => {
   }
 });
 
+// GET MY FILES
+router.get("/my-files", auth, async (req, res) => {
+  try {
+    const files = await fileModel.find({ uploadedBy: req.user.id }).sort({ createdAt: -1 });
+
+    res.json(files);
+  } catch (error) {
+    console.log("🔥 MY FILES ERROR:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
 export default router;
