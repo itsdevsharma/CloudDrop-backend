@@ -82,7 +82,7 @@ router.delete("/:id", auth, async (req, res) => {
     await fileModel.findByIdAndDelete(req.params.id);
 
     res.json({ message: "File deleted successfully" });
-    alert("File Deleted Successfully");
+    
   } catch (error) {
     console.log("🔥 DELETE ERROR:", error);
     res.status(500).json({ message: error.message });
