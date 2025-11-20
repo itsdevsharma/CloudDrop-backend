@@ -70,5 +70,23 @@ router.get("/my-files", auth, async (req, res) => {
   }
 });
 
+// DELETE FILE
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    const file = await fileModel.findById(req.params.id);
+
+    if (!file) {
+      return res.status(404).json({ message: "File not found" });
+    }
+
+    await fileModel.findByIdAndDelete(req.params.id);
+
+    res.json({ message: "File deleted successfully" });
+  } catch (error) {
+    console.log("🔥 DELETE ERROR:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 export default router;
